@@ -3,14 +3,14 @@ paths:
     get:
       parameters:
       - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      - in: path
         name: content
         schema:
           type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
         required: true
       responses:
         '200':
@@ -35,7 +35,7 @@ components:
     Test:
       type: object
       properties:
-        id:
-          type: integer
         content:
           type: string
+        id:
+          type: integer

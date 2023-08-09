@@ -88,4 +88,4 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 app.register_blueprint(swaggerui_blueprint)
 
 # run application
-app.run()
+# app.run()
