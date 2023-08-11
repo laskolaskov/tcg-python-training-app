@@ -1,17 +1,6 @@
 paths:
-  /test/{id}/{content}:
+  /test:
     get:
-      parameters:
-      - in: path
-        name: content
-        schema:
-          type: string
-        required: true
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
       responses:
         '200':
           content:

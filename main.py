@@ -3,9 +3,14 @@ from flask import abort, redirect, url_for, request
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_plugins.webframeworks.flask import FlaskPlugin
-from marshmallow import Schema, fields
 from flask_swagger_ui import get_swaggerui_blueprint
-from db import db_test
+from db import Database
+from schemas import TestSchema
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DB = Database()
 
 
 # Create an APISpec
@@ -17,11 +22,6 @@ spec = APISpec(
 )
 
 
-class TestSchema(Schema):
-    id = fields.Int()
-    content = fields.Str()
-
-
 app = Flask(__name__)
 
 
@@ -30,8 +30,23 @@ def index():
     return redirect("/api")
 
 
-@app.route("/test/<id>/<content>")
+@app.route("/test")
 def test(id, content):
+    """Gist detail view.
+    ---
+    get:
+      responses:
+        200:
+          content:
+            application/json:
+              schema: TestSchema
+    """
+    # return "<h1>Test</h1>"
+    return f"<h1>Post {id} - {content}</h1>"
+
+
+@app.route("/test/<id>/<content>")
+def test_params(id, content):
     """Gist detail view.
     ---
     get:
@@ -49,7 +64,7 @@ def test(id, content):
 
 
 @app.route("/test/db")
-def db_test_ep():
+def test_db_ep():
     """Gist detail view.
     ---
     get:
@@ -60,13 +75,14 @@ def db_test_ep():
               schema: TestSchema
     """
     # return "<h1>Test</h1>"
-    return f"<h1>DB: {db_test()}</h1>"
+    print(DB.db_test())
+    return "Test"
 
 
 # add to openapi spec
 with app.test_request_context():
     spec.path(view=test)
-    spec.path(view=db_test_ep)
+    spec.path(view=test_db_ep)
 
 # generate static openapi.yaml config file
 openApiYaml = open("static/openapi.yaml", "w")
@@ -81,11 +97,8 @@ API_URL = "/static/openapi.yaml"
 swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
-    config={"app_name": "Test application"},
+    config={"app_name": "TCG Game!"},
 )
 
 # register the swagger UI blueprint
 app.register_blueprint(swaggerui_blueprint)
-
-# run application
-# app.run()
