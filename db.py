@@ -1,16 +1,13 @@
 # from Models import Base, BookModel, UserModel
 from sqlalchemy import create_engine, select, Select, ScalarResult, Engine
 from sqlalchemy.orm import Session
-import os
-
-db_url = os.getenv("DATABASE_URL")
 
 
 class Database:
     session: Session
     engine: Engine
 
-    def __init__(self):
+    def __init__(self, db_url: str):
         self.engine = create_engine(db_url)
         self.session = Session(self.engine)
 

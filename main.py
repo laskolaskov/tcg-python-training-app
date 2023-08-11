@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask import abort, redirect, url_for, request
 from apispec import APISpec
@@ -9,8 +10,10 @@ from schemas import TestSchema
 from dotenv import load_dotenv
 
 load_dotenv()
+db_url = os.getenv("DATABASE_URL")
+print(f"URL: {db_url}")
 
-DB = Database()
+DB = Database(db_url)
 
 
 # Create an APISpec
