@@ -1,5 +1,14 @@
-# from Models import Base, BookModel, UserModel
-from sqlalchemy import create_engine, select, Select, ScalarResult, Engine
+from models import Base, UserModel
+from sqlalchemy import (
+    create_engine,
+    select,
+    insert,
+    Select,
+    Result,
+    ScalarResult,
+    Engine,
+    Insert,
+)
 from sqlalchemy.orm import Session
 
 
@@ -18,8 +27,8 @@ class Database:
     def db_test(self):
         return self.engine.connect()
 
-    """ def init_db(self):
-        data = [
+    def init_db(self):
+        """data = [
             BookModel(
                 title="Test Book 1", author="John Doe", rating=10, isbn=111234, count=2
             ),
@@ -31,11 +40,26 @@ class Database:
             ),
             UserModel(username="lasko.laskov"),
             UserModel(username="test.user"),
-        ]
+        ]"""
 
         Base.metadata.create_all(self.engine)
-        self.session.add_all(data)
-        self.session.commit() """
+        # self.session.add_all(data)
+        # self.session.commit()
+
+    def getUserByName(self, name: str) -> UserModel:
+        stmt: Select = select(UserModel).where(UserModel.username == name)
+        result: Result = self.session.execute(stmt)
+        return result.scalar()
+
+    def getAllUsers(self) -> ScalarResult[UserModel]:
+        stmt: Select = select(UserModel)
+        result: Result = self.session.execute(stmt)
+        return result.scalars()
+
+    def insertUser(self, username: str, password: str, is_admin: bool):
+        user = UserModel(username=username, password=password, is_admin=is_admin)
+        self.session.add(user)
+        self.session.commit()
 
     """ def get_all_books(self) -> ScalarResult[BookModel]:
         stmt: Select = select(BookModel)

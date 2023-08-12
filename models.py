@@ -1,7 +1,7 @@
 import json
 from sqlalchemy_serializer import SerializerMixin
 from typing import List
-from sqlalchemy import Table, Column, Integer, ForeignKey, String
+from sqlalchemy import Table, Column, Integer, ForeignKey, String, Boolean
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -52,15 +52,17 @@ class Base(DeclarativeBase, SerializerMixin):
 
 
 class UserModel(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(255))
+    username: Mapped[str] = mapped_column(String(70), unique=True)
+    password: Mapped[str] = mapped_column(String())
+    is_admin: Mapped[bool] = mapped_column(Boolean())
     """ books: Mapped[List["BookModel"]] = relationship(
         back_populates="borrowed_by", secondary=book_user_association
     ) """
 
     def __repr__(self) -> str:
-        return f"User(id={self.id!r}, username={self.username!r}, books={self.books!r})"
+        return f"User(id={self.id!r}, username={self.username!r}, password={self.password})"
 
 
 class TestModel(Base):

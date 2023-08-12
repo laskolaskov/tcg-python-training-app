@@ -1,14 +1,69 @@
 paths:
-  /test:
-    get:
+  /auth:
+    post:
+      tags:
+      - Authenticate
+      description: Create new access token for user
+      summary: Get access token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      content: application/json
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Test'
-  /test/db:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /signup:
+    post:
+      tags:
+      - Authenticate
+      description: Create new user account with e-mail and password
+      summary: Create new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreatedResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/test/db:
     get:
+      security:
+      - token: []
       responses:
         '200':
           content:
@@ -21,10 +76,48 @@ info:
 openapi: 3.0.2
 components:
   schemas:
+    UserCredentials:
+      type: object
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+          format: email
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    SignupRequest:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        password:
+          type: string
+        username:
+          type: string
+          format: email
+    UserCreatedResponse:
+      type: object
+      properties:
+        message:
+          type: string
     Test:
       type: object
       properties:
-        content:
-          type: string
         id:
           type: integer
+        content:
+          type: string
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
