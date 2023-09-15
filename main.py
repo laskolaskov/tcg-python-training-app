@@ -8,13 +8,9 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import Database
+# need to import anything from the schemas, without this it does NOT work ???
 from schemas import (
     TestSchema,
-    TokenResponse,
-    UserCredentials,
-    UserCreatedResponse,
-    ErrorResponse,
-    SignupRequest,
 )
 import jwt
 from datetime import datetime, timedelta
@@ -31,7 +27,7 @@ secret_key = (
 
 # create database object
 db = Database(db_url)
-# db.init_db()  # rebuilds DB schema, be careful!!!
+db.init_db()  # rebuilds DB schema, be careful!!!
 
 
 # Create an APISpec
@@ -87,8 +83,7 @@ def index():
 
 @app.route("/test")
 def test():
-    result = db.getAllUsers()
-    return [u.to_dict() for u in result]
+    return "test"
 
 
 @app.route("/auth", methods=["POST"])
@@ -198,38 +193,119 @@ def signup():
     # checking for existing user
     user = db.getUserByName(username)
     if user:
-        return ({"message": "User already exists. Please Log in."}, 400)
+        return (
+            {
+                "message": "This username already exists! Get your token at /auth and start exploring!"
+            },
+            400,
+        )
 
     db.insertUser(username, generate_password_hash(password), is_admin)
 
-    return ({"message": "Successfully registered."}, 200)
+    return (
+        {
+            "message": "Successfully registered. Get your token at /auth and go check your starting collection at '/my/collection'!"
+        },
+        200,
+    )
 
 
-@app.route("/api/test/db")
+@app.route("/my/collection", methods=["GET"])
 @token_required
-def test_db_ep(current_user: UserModel):
-    """Gist detail view.
+def my_collection(current_user: UserModel):
+    """My cards collection.
     ---
     get:
+      tags:
+        - My Data
       security:
         - token: []
       responses:
         200:
           content:
             application/json:
-              schema: TestSchema
+              schema: CollectionResponse
+    """
+    c = []
+    for collection in current_user.collections:
+        c.append(
+            {
+                "name": collection.card.name,
+                "url": collection.card.url,
+                "count": collection.count,
+                "price": collection.price,
+                "is_marketed": collection.is_marketed,
+            }
+        )
+
+    return {"owner": current_user.username, "collection": c}
+
+
+@app.route("/my/user", methods=["GET"])
+@token_required
+def my_user(current_user: UserModel):
+    """My user information.
+    ---
+    get:
+      tags:
+        - My Data
+      security:
+        - token: []
+      responses:
+        200:
+          content:
+            application/json:
+              schema: UserResponse
+    """
+    return {
+        "name": current_user.username,
+        "credits": current_user.credits,
+        "cards": len(current_user.collections),
+    }
+
+
+@app.route("/sell/card/<id>/price/<price>", methods=["POST"])
+def sell_card():
+    """Authenticate.
+    ---
+    post:
+      tags:
+        - Authenticate
+      description: Create new access token for user
+      summary: Get access token
+      requestBody:
+        content:
+          application/json:
+            schema: UserCredentials
+          application/x-www-form-urlencoded:
+            schema: UserCredentials
+      content: application/json
+      responses:
+        200:
+          content:
+            application/json:
+              schema: TokenResponse
+        401:
+          content:
+            application/json:
+              schema: ErrorResponse
+        403:
+          content:
+            application/json:
+              schema: ErrorResponse
+        500:
+          content:
+            application/json:
+              schema: ErrorResponse
     """
 
-    print(db.db_test())
-    print(current_user)
-    return current_user.to_dict()
 
-
-# add to openapi spec
+# add routes to openapi spec
 with app.test_request_context():
     spec.path(view=auth)
     spec.path(view=signup)
-    spec.path(view=test_db_ep)
+    spec.path(view=my_user)
+    spec.path(view=my_collection)
 
 # generate static openapi.yaml config file
 openApiYaml = open("static/openapi.yaml", "w")

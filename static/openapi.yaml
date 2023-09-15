@@ -60,8 +60,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /api/test/db:
+  /my/user:
     get:
+      tags:
+      - My Data
       security:
       - token: []
       responses:
@@ -69,7 +71,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Test'
+                $ref: '#/components/schemas/UserResponse'
+  /my/collection:
+    get:
+      tags:
+      - My Data
+      security:
+      - token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
 info:
   title: TCG Game!
   version: 1.0.0
@@ -97,8 +111,6 @@ components:
     SignupRequest:
       type: object
       properties:
-        admin:
-          type: boolean
         password:
           type: string
         username:
@@ -109,13 +121,38 @@ components:
       properties:
         message:
           type: string
-    Test:
+    UserResponse:
       type: object
       properties:
-        id:
+        credits:
           type: integer
-        content:
+        cards:
+          type: integer
+        name:
           type: string
+          format: email
+    CollectionCardResponse:
+      type: object
+      properties:
+        is_marketed:
+          type: boolean
+        price:
+          type: integer
+        url:
+          type: string
+        count:
+          type: integer
+        name:
+          type: string
+    CollectionResponse:
+      type: object
+      properties:
+        owner:
+          type: string
+        collection:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionCardResponse'
   securitySchemes:
     token:
       type: http
