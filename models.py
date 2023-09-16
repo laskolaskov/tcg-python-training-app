@@ -48,4 +48,4 @@ class CollectionModel(Base):
     is_marketed: Mapped[bool] = mapped_column(Boolean())
 
     def __repr__(self) -> str:
-        return f"Collection(id={self.id!r}, user={self.user.username}, card={self.card.name!r}, count={self.count!r}, price={self.price!r}, is_marketed={self.is_marketed!r})"
+        return f"Collection(user={self.user.username}, card={self.card.name!r}, count={self.count!r}, price={self.price!r}, is_marketed={self.is_marketed!r})"

@@ -3,8 +3,7 @@ paths:
     post:
       tags:
       - Authenticate
-      description: Create new access token for user
-      summary: Get access token
+      summary: Get access token.
       requestBody:
         content:
           application/json:
@@ -20,6 +19,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           content:
             application/json:
@@ -39,8 +43,7 @@ paths:
     post:
       tags:
       - Authenticate
-      description: Create new user account with e-mail and password
-      summary: Create new user
+      summary: Create new user.
       requestBody:
         content:
           application/json:
@@ -54,7 +57,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserCreatedResponse'
+                $ref: '#/components/schemas/OkResponse'
         '400':
           content:
             application/json:
@@ -64,6 +67,7 @@ paths:
     get:
       tags:
       - My Data
+      summary: My user information.
       security:
       - token: []
       responses:
@@ -76,6 +80,7 @@ paths:
     get:
       tags:
       - My Data
+      summary: My cards collection.
       security:
       - token: []
       responses:
@@ -84,6 +89,349 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionResponse'
+  /market:
+    get:
+      tags:
+      - Market
+      summary: Marketplace.
+      security:
+      - token: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+  /sell:
+    post:
+      tags:
+      - Market
+      summary: Put one of your cards on the market.
+      security:
+      - token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellCardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SellCardRequest'
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /buy:
+    post:
+      tags:
+      - Market
+      summary: Buy card from another user.
+      security:
+      - token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyCardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BuyCardRequest'
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /cancel:
+    post:
+      tags:
+      - Market
+      summary: Pull your card off the market.
+      security:
+      - token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelSellCardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelSellCardRequest'
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /admin/sell:
+    post:
+      tags:
+      - Admin
+      summary: Sell card of a user.
+      security:
+      - token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellUserCardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SellUserCardRequest'
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /admin/buy:
+    post:
+      tags:
+      - Admin
+      summary: Buy card of a user for another user.
+      security:
+      - token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyUserCardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BuyUserCardRequest'
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /admin/cancel:
+    post:
+      tags:
+      - Admin
+      summary: Cancel selling card of a user.
+      security:
+      - token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelSellUserCardRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelSellUserCardRequest'
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /admin/users:
+    get:
+      tags:
+      - Admin
+      summary: Get users.
+      security:
+      - token: []
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersAdminResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /admin/cards:
+    get:
+      tags:
+      - Admin
+      summary: Get cards.
+      security:
+      - token: []
+      content: application/json
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersAdminResponse'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 info:
   title: TCG Game!
   version: 1.0.0
@@ -116,7 +464,7 @@ components:
         username:
           type: string
           format: email
-    UserCreatedResponse:
+    OkResponse:
       type: object
       properties:
         message:
@@ -124,35 +472,105 @@ components:
     UserResponse:
       type: object
       properties:
-        credits:
-          type: integer
         cards:
           type: integer
         name:
           type: string
           format: email
+        credits:
+          type: integer
     CollectionCardResponse:
       type: object
       properties:
         is_marketed:
           type: boolean
-        price:
-          type: integer
         url:
           type: string
-        count:
-          type: integer
+          format: url
         name:
           type: string
+        card_id:
+          type: integer
+        price:
+          type: integer
+        count:
+          type: integer
     CollectionResponse:
       type: object
       properties:
-        owner:
-          type: string
         collection:
           type: array
           items:
             $ref: '#/components/schemas/CollectionCardResponse'
+        owner:
+          type: string
+    SellCardRequest:
+      type: object
+      properties:
+        price:
+          type: integer
+        card_id:
+          type: integer
+    BuyCardRequest:
+      type: object
+      properties:
+        seller_id:
+          type: integer
+        card_id:
+          type: integer
+    CancelSellCardRequest:
+      type: object
+      properties:
+        card_id:
+          type: integer
+    SellUserCardRequest:
+      type: object
+      properties:
+        price:
+          type: integer
+        user_id:
+          type: integer
+        card_id:
+          type: integer
+    BuyUserCardRequest:
+      type: object
+      properties:
+        buyer_id:
+          type: integer
+        seller_id:
+          type: integer
+        card_id:
+          type: integer
+    CancelSellUserCardRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        card_id:
+          type: integer
+    UserAdminResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          format: email
+        credits:
+          type: integer
+        collection:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionCardResponse'
+    UsersAdminResponse:
+      type: object
+      properties:
+        current:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAdminResponse'
   securitySchemes:
     token:
       type: http

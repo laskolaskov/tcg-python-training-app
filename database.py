@@ -82,6 +82,11 @@ class Database:
         )
         result: Result = self.session.execute(stmt)
         return result.scalar()
+    
+    def getMarketedCollections(self) -> ScalarResult[CollectionModel]:
+        stmt: Select = select(CollectionModel).where(CollectionModel.is_marketed == True)
+        result: Result = self.session.execute(stmt)
+        return result.scalars()
 
     def draftCardsForUser(self, user: UserModel):
         mtg_cards = get_k_cards(5)
@@ -89,7 +94,6 @@ class Database:
         new_cards = []
 
         for c in mtg_cards:
-            # load user
             cm: CardModel = self.getCardByName(c.get("name"))
 
             if not cm:
@@ -103,9 +107,6 @@ class Database:
 
         # add cards
         self.session.add_all(new_cards)
-        """ self.session.execute(insert(CardModel)
-                .values(cards)
-                .on_conflict_do_nothing()) """
         self.session.commit()
 
         # add to user collection
