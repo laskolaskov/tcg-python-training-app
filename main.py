@@ -361,7 +361,6 @@ def sell_card(current_user: UserModel):
             schema: SellCardRequest
           application/x-www-form-urlencoded:
             schema: SellCardRequest
-      content: application/json
       responses:
         200:
           description: OK
@@ -431,6 +430,7 @@ def buy_card(current_user: UserModel):
       tags:
         - Market
       summary: Buy card from another user.
+      description: Buy card from another user.
       security:
         - token: []
       requestBody:
@@ -439,29 +439,29 @@ def buy_card(current_user: UserModel):
             schema: BuyCardRequest
           application/x-www-form-urlencoded:
             schema: BuyCardRequest
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
-          content:
-            application/json:
-              schema: ErrorResponse
-        403:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         404:
+          description: Not Found
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -547,6 +547,7 @@ def cancel_sell_card(current_user: UserModel):
       tags:
         - Market
       summary: Pull your card off the market.
+      description: Pull your card off the market.
       security:
         - token: []
       requestBody:
@@ -555,29 +556,29 @@ def cancel_sell_card(current_user: UserModel):
             schema: CancelSellCardRequest
           application/x-www-form-urlencoded:
             schema: CancelSellCardRequest
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
-          content:
-            application/json:
-              schema: ErrorResponse
-        403:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         404:
+          description: Not Found
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -626,6 +627,7 @@ def admin_sell_user_card(current_user: UserModel):
       tags:
         - Admin
       summary: Sell card of a user.
+      description: Sell card of a user.
       security:
         - token: []
       requestBody:
@@ -634,29 +636,34 @@ def admin_sell_user_card(current_user: UserModel):
             schema: SellUserCardRequest
           application/x-www-form-urlencoded:
             schema: SellUserCardRequest
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         403:
+          description: Forbidden
           content:
             application/json:
               schema: ErrorResponse
         404:
+          description: Not Found
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -716,6 +723,7 @@ def admin_buy_user_card(current_user: UserModel):
       tags:
         - Admin
       summary: Buy card of a user for another user.
+      description: Buy card of a user for another user.
       security:
         - token: []
       requestBody:
@@ -724,29 +732,34 @@ def admin_buy_user_card(current_user: UserModel):
             schema: BuyUserCardRequest
           application/x-www-form-urlencoded:
             schema: BuyUserCardRequest
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         403:
+          description: Forbidden
           content:
             application/json:
               schema: ErrorResponse
         404:
+          description: Not Found
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -844,6 +857,7 @@ def admin_cancel_sell_user_card(current_user: UserModel):
       tags:
         - Admin
       summary: Cancel selling card of a user.
+      description: Cancel selling card of a user.
       security:
         - token: []
       requestBody:
@@ -852,29 +866,34 @@ def admin_cancel_sell_user_card(current_user: UserModel):
             schema: CancelSellUserCardRequest
           application/x-www-form-urlencoded:
             schema: CancelSellUserCardRequest
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         403:
+          description: Forbidden
           content:
             application/json:
               schema: ErrorResponse
         404:
+          description: Not Found
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -928,19 +947,27 @@ def admin_users(current_user: UserModel):
       tags:
         - Admin
       summary: Get users.
+      description: Get users.
       security:
         - token: []
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: UsersAdminResponse
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema: ErrorResponse
         403:
+          description: Forbidden
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -981,19 +1008,27 @@ def admin_cards(current_user: UserModel):
       tags:
         - Admin
       summary: Get cards.
+      description: Get cards.
       security:
         - token: []
-      content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
-              schema: UsersAdminResponse
+              schema: CardsAdminResponse
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema: ErrorResponse
         403:
+          description: Forbidden
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse

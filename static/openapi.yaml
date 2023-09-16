@@ -149,7 +149,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/SellCardRequest'
-      content: application/json
       responses:
         '200':
           description: OK
@@ -186,6 +185,7 @@ paths:
       tags:
       - Market
       summary: Buy card from another user.
+      description: Buy card from another user.
       security:
       - token: []
       requestBody:
@@ -196,34 +196,33 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/BuyCardRequest'
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -233,6 +232,7 @@ paths:
       tags:
       - Market
       summary: Pull your card off the market.
+      description: Pull your card off the market.
       security:
       - token: []
       requestBody:
@@ -243,34 +243,33 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/CancelSellCardRequest'
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -280,6 +279,7 @@ paths:
       tags:
       - Admin
       summary: Sell card of a user.
+      description: Sell card of a user.
       security:
       - token: []
       requestBody:
@@ -290,34 +290,39 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/SellUserCardRequest'
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -327,6 +332,7 @@ paths:
       tags:
       - Admin
       summary: Buy card of a user for another user.
+      description: Buy card of a user for another user.
       security:
       - token: []
       requestBody:
@@ -337,34 +343,39 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/BuyUserCardRequest'
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -374,6 +385,7 @@ paths:
       tags:
       - Admin
       summary: Cancel selling card of a user.
+      description: Cancel selling card of a user.
       security:
       - token: []
       requestBody:
@@ -384,34 +396,39 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/CancelSellUserCardRequest'
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -421,21 +438,30 @@ paths:
       tags:
       - Admin
       summary: Get users.
+      description: Get users.
       security:
       - token: []
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UsersAdminResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -445,21 +471,30 @@ paths:
       tags:
       - Admin
       summary: Get cards.
+      description: Get cards.
       security:
       - token: []
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersAdminResponse'
+                $ref: '#/components/schemas/CardsAdminResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -473,11 +508,11 @@ components:
     UserCredentials:
       type: object
       properties:
+        password:
+          type: string
         username:
           type: string
           format: email
-        password:
-          type: string
     TokenResponse:
       type: object
       properties:
@@ -491,11 +526,11 @@ components:
     SignupRequest:
       type: object
       properties:
+        password:
+          type: string
         username:
           type: string
           format: email
-        password:
-          type: string
     OkResponse:
       type: object
       properties:
@@ -504,29 +539,29 @@ components:
     UserResponse:
       type: object
       properties:
-        credits:
-          type: integer
         name:
           type: string
           format: email
+        credits:
+          type: integer
         cards:
           type: integer
     CollectionCardResponse:
       type: object
       properties:
+        price:
+          type: integer
         url:
           type: string
           format: url
-        is_marketed:
-          type: boolean
-        name:
-          type: string
         card_id:
           type: integer
         count:
           type: integer
-        price:
-          type: integer
+        is_marketed:
+          type: boolean
+        name:
+          type: string
     CollectionResponse:
       type: object
       properties:
@@ -558,9 +593,9 @@ components:
     SellUserCardRequest:
       type: object
       properties:
-        price:
-          type: integer
         user_id:
+          type: integer
+        price:
           type: integer
         card_id:
           type: integer
@@ -583,17 +618,17 @@ components:
     UserAdminResponse:
       type: object
       properties:
-        credits:
-          type: integer
         id:
           type: integer
-        name:
-          type: string
-          format: email
         collection:
           type: array
           items:
             $ref: '#/components/schemas/CollectionCardResponse'
+        credits:
+          type: integer
+        name:
+          type: string
+          format: email
     UsersAdminResponse:
       type: object
       properties:
@@ -603,6 +638,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserAdminResponse'
+    CardAdminResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+          format: url
+        name:
+          type: string
+    CardsAdminResponse:
+      type: object
+      properties:
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardAdminResponse'
+        total:
+          type: string
   securitySchemes:
     token:
       type: http
