@@ -106,31 +106,36 @@ def auth():
       tags:
         - Authenticate
       summary: Get access token.
+      description: Get access token.
       requestBody:
         content:
           application/json:
             schema: UserCredentials
           application/x-www-form-urlencoded:
             schema: UserCredentials
-      content: application/json
       responses:
         200:
+          description: OK  
           content:
             application/json:
               schema: TokenResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         403:
+          description: Forbidden
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse
@@ -173,6 +178,7 @@ def signup():
       tags:
         - Authenticate
       summary: Create new user.
+      description: Create new user.
       requestBody:
         content:
           application/json:
@@ -181,10 +187,12 @@ def signup():
             schema: SignupRequest
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
@@ -233,13 +241,20 @@ def my_collection(current_user: UserModel):
       tags:
         - My Data
       summary: My cards collection.
+      description: My cards collection.
       security:
         - token: []
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: CollectionResponse
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: ErrorResponse
     """
     return {
         "owner": current_user.username,
@@ -266,13 +281,20 @@ def my_user(current_user: UserModel):
       tags:
         - My Data
       summary: My user information.
+      description: My user information.
       security:
         - token: []
       responses:
         200:
+          description: Ok
           content:
             application/json:
               schema: UserResponse
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: ErrorResponse
     """
     return {
         "name": current_user.username,
@@ -294,9 +316,15 @@ def market(current_user: UserModel):
         - token: []
       responses:
         200:
+          description: Ok
           content:
             application/json:
               schema: OkResponse
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: ErrorResponse
     """
     marketed = db.getMarketedCollections()
 
@@ -324,6 +352,7 @@ def sell_card(current_user: UserModel):
       tags:
         - Market
       summary: Put one of your cards on the market.
+      description: Put one of your cards on the market.
       security:
         - token: []
       requestBody:
@@ -335,26 +364,27 @@ def sell_card(current_user: UserModel):
       content: application/json
       responses:
         200:
+          description: OK
           content:
             application/json:
               schema: OkResponse
         400:
+          description: Bad Request
           content:
             application/json:
               schema: ErrorResponse
         401:
-          content:
-            application/json:
-              schema: ErrorResponse
-        403:
+          description: Unauthorized
           content:
             application/json:
               schema: ErrorResponse
         404:
+          description: Not Found
           content:
             application/json:
               schema: ErrorResponse
         500:
+          description: Internal Server Error
           content:
             application/json:
               schema: ErrorResponse

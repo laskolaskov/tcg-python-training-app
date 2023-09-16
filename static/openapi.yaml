@@ -4,6 +4,7 @@ paths:
       tags:
       - Authenticate
       summary: Get access token.
+      description: Get access token.
       requestBody:
         content:
           application/json:
@@ -12,29 +13,33 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/UserCredentials'
-      content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -44,6 +49,7 @@ paths:
       tags:
       - Authenticate
       summary: Create new user.
+      description: Create new user.
       requestBody:
         content:
           application/json:
@@ -54,11 +60,13 @@ paths:
               $ref: '#/components/schemas/SignupRequest'
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -68,27 +76,43 @@ paths:
       tags:
       - My Data
       summary: My user information.
+      description: My user information.
       security:
       - token: []
       responses:
         '200':
+          description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /my/collection:
     get:
       tags:
       - My Data
       summary: My cards collection.
+      description: My cards collection.
       security:
       - token: []
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /market:
     get:
       tags:
@@ -98,15 +122,23 @@ paths:
       - token: []
       responses:
         '200':
+          description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /sell:
     post:
       tags:
       - Market
       summary: Put one of your cards on the market.
+      description: Put one of your cards on the market.
       security:
       - token: []
       requestBody:
@@ -120,31 +152,31 @@ paths:
       content: application/json
       responses:
         '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
         '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -441,11 +473,11 @@ components:
     UserCredentials:
       type: object
       properties:
-        password:
-          type: string
         username:
           type: string
           format: email
+        password:
+          type: string
     TokenResponse:
       type: object
       properties:
@@ -459,11 +491,11 @@ components:
     SignupRequest:
       type: object
       properties:
-        password:
-          type: string
         username:
           type: string
           format: email
+        password:
+          type: string
     OkResponse:
       type: object
       properties:
@@ -472,28 +504,28 @@ components:
     UserResponse:
       type: object
       properties:
-        cards:
+        credits:
           type: integer
         name:
           type: string
           format: email
-        credits:
+        cards:
           type: integer
     CollectionCardResponse:
       type: object
       properties:
-        is_marketed:
-          type: boolean
         url:
           type: string
           format: url
+        is_marketed:
+          type: boolean
         name:
           type: string
         card_id:
           type: integer
-        price:
-          type: integer
         count:
+          type: integer
+        price:
           type: integer
     CollectionResponse:
       type: object
@@ -551,13 +583,13 @@ components:
     UserAdminResponse:
       type: object
       properties:
+        credits:
+          type: integer
         id:
           type: integer
         name:
           type: string
           format: email
-        credits:
-          type: integer
         collection:
           type: array
           items:
