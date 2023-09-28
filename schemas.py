@@ -63,7 +63,6 @@ class CardAdminResponse(Schema):
     url = fields.Url()
 
 class CardsAdminResponse(Schema):
-    total = fields.Str()
     cards = fields.List(fields.Nested(CardAdminResponse))
 
 class SellUserCardRequest(Schema):

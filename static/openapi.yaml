@@ -549,19 +549,19 @@ components:
     CollectionCardResponse:
       type: object
       properties:
-        price:
-          type: integer
         url:
           type: string
           format: url
-        card_id:
-          type: integer
-        count:
-          type: integer
-        is_marketed:
-          type: boolean
         name:
           type: string
+        is_marketed:
+          type: boolean
+        count:
+          type: integer
+        price:
+          type: integer
+        card_id:
+          type: integer
     CollectionResponse:
       type: object
       properties:
@@ -574,16 +574,16 @@ components:
     SellCardRequest:
       type: object
       properties:
-        price:
-          type: integer
         card_id:
+          type: integer
+        price:
           type: integer
     BuyCardRequest:
       type: object
       properties:
-        seller_id:
-          type: integer
         card_id:
+          type: integer
+        seller_id:
           type: integer
     CancelSellCardRequest:
       type: object
@@ -595,18 +595,18 @@ components:
       properties:
         user_id:
           type: integer
-        price:
-          type: integer
         card_id:
+          type: integer
+        price:
           type: integer
     BuyUserCardRequest:
       type: object
       properties:
+        card_id:
+          type: integer
         buyer_id:
           type: integer
         seller_id:
-          type: integer
-        card_id:
           type: integer
     CancelSellUserCardRequest:
       type: object
@@ -618,17 +618,17 @@ components:
     UserAdminResponse:
       type: object
       properties:
-        id:
-          type: integer
         collection:
           type: array
           items:
             $ref: '#/components/schemas/CollectionCardResponse'
-        credits:
-          type: integer
         name:
           type: string
           format: email
+        credits:
+          type: integer
+        id:
+          type: integer
     UsersAdminResponse:
       type: object
       properties:
@@ -641,13 +641,13 @@ components:
     CardAdminResponse:
       type: object
       properties:
-        id:
-          type: integer
+        name:
+          type: string
         url:
           type: string
           format: url
-        name:
-          type: string
+        id:
+          type: integer
     CardsAdminResponse:
       type: object
       properties:
@@ -655,8 +655,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CardAdminResponse'
-        total:
-          type: string
   securitySchemes:
     token:
       type: http

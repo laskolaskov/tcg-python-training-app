@@ -1036,7 +1036,6 @@ def admin_cards(current_user: UserModel):
     cards = db.getAllCards()
 
     return {
-        "total": len(cards),
         "cards": [
             {
                 "name": card.name,
