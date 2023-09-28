@@ -49,15 +49,15 @@ paths:
       tags:
       - Authenticate
       summary: Create new user.
-      description: Create new user.
+      description: Create new user. You can use dummy e-mail, there is no verification.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupRequest'
+              $ref: '#/components/schemas/UserCredentials'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SignupRequest'
+              $ref: '#/components/schemas/UserCredentials'
       responses:
         '200':
           description: OK
@@ -513,6 +513,9 @@ components:
         username:
           type: string
           format: email
+      required:
+      - password
+      - username
     TokenResponse:
       type: object
       properties:
@@ -523,14 +526,6 @@ components:
       properties:
         error:
           type: string
-    SignupRequest:
-      type: object
-      properties:
-        password:
-          type: string
-        username:
-          type: string
-          format: email
     OkResponse:
       type: object
       properties:
@@ -549,19 +544,19 @@ components:
     CollectionCardResponse:
       type: object
       properties:
-        price:
-          type: integer
+        name:
+          type: string
+        is_marketed:
+          type: boolean
         url:
           type: string
           format: url
         card_id:
           type: integer
+        price:
+          type: integer
         count:
           type: integer
-        is_marketed:
-          type: boolean
-        name:
-          type: string
     CollectionResponse:
       type: object
       properties:
@@ -574,9 +569,9 @@ components:
     SellCardRequest:
       type: object
       properties:
-        price:
-          type: integer
         card_id:
+          type: integer
+        price:
           type: integer
     BuyCardRequest:
       type: object
@@ -593,42 +588,42 @@ components:
     SellUserCardRequest:
       type: object
       properties:
-        user_id:
+        card_id:
           type: integer
         price:
           type: integer
-        card_id:
+        user_id:
           type: integer
     BuyUserCardRequest:
       type: object
       properties:
-        buyer_id:
-          type: integer
         seller_id:
           type: integer
         card_id:
           type: integer
+        buyer_id:
+          type: integer
     CancelSellUserCardRequest:
       type: object
       properties:
-        user_id:
-          type: integer
         card_id:
+          type: integer
+        user_id:
           type: integer
     UserAdminResponse:
       type: object
       properties:
-        id:
+        name:
+          type: string
+          format: email
+        credits:
           type: integer
         collection:
           type: array
           items:
             $ref: '#/components/schemas/CollectionCardResponse'
-        credits:
+        id:
           type: integer
-        name:
-          type: string
-          format: email
     UsersAdminResponse:
       type: object
       properties:
@@ -641,22 +636,22 @@ components:
     CardAdminResponse:
       type: object
       properties:
-        id:
-          type: integer
+        name:
+          type: string
         url:
           type: string
           format: url
-        name:
-          type: string
+        id:
+          type: integer
     CardsAdminResponse:
       type: object
       properties:
+        total:
+          type: string
         cards:
           type: array
           items:
             $ref: '#/components/schemas/CardAdminResponse'
-        total:
-          type: string
   securitySchemes:
     token:
       type: http

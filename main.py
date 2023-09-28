@@ -10,13 +10,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from database import Database
 
 # need to import anything from the schemas, without this it does NOT work ???
-from schemas import (
-    TestSchema,
-)
+from schemas import TestSchema
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from models import UserModel, CardModel, CollectionModel
+from validator import validate_signup, validate_auth, validate_sell_card
+from marshmallow import ValidationError
 
 # load .env variables
 load_dotenv()
@@ -115,7 +115,7 @@ def auth():
             schema: UserCredentials
       responses:
         200:
-          description: OK  
+          description: OK
           content:
             application/json:
               schema: TokenResponse
@@ -140,22 +140,18 @@ def auth():
             application/json:
               schema: ErrorResponse
     """
+
     if request.content_type == "application/json":
-        auth = request.json
+        input = request.json
     else:
-        auth = request.form
+        input = request.form
 
-    if not auth or not auth.get("username") or not auth.get("password"):
-        # returns 400 if any email or / and password is missing
-        return ({"error": "Please provide user credentials"}, 400)
+    try:
+        user = validate_auth(input, db)
+    except ValidationError as e:
+        return ({"error": e.messages}, 400)
 
-    # load user
-    user: UserModel = db.getUserByName(auth.get("username"))
-
-    if not user:
-        return ({"error": "Could not verify user credentials"}, 403)
-
-    if check_password_hash(user.password, auth.get("password")):
+    if check_password_hash(user.password, input.get("password")):
         # generates the JWT Token
         token = jwt.encode(
             {
@@ -178,13 +174,13 @@ def signup():
       tags:
         - Authenticate
       summary: Create new user.
-      description: Create new user.
+      description: Create new user. You can use dummy e-mail, there is no verification.
       requestBody:
         content:
           application/json:
-            schema: SignupRequest
+            schema: UserCredentials
           application/x-www-form-urlencoded:
-            schema: SignupRequest
+            schema: UserCredentials
       responses:
         200:
           description: OK
@@ -199,30 +195,20 @@ def signup():
     """
 
     if request.content_type == "application/json":
-        data = request.json
+        input = request.json
     else:
-        data = request.form
+        input = request.form
 
-    if not data or not data.get("username") or not data.get("password"):
-        # returns 400 if any email or / and password is missing
-        return ({"error": "Please provide username and password"}, 400)
+    try:
+        signup = validate_signup(input, db)
+    except ValidationError as e:
+        return ({"error": e.messages}, 400)
 
-    # gets email and password
-    username = data.get("username")
-    password = data.get("password")
-    is_admin = data.get("admin") or False
-
-    # checking for existing user
-    user = db.getUserByName(username)
-    if user:
-        return (
-            {
-                "message": "This username already exists! Get your token at /auth and start exploring!"
-            },
-            400,
-        )
-
-    db.insertUser(username, generate_password_hash(password), is_admin)
+    db.insertUser(
+        signup["username"],
+        generate_password_hash(signup["password"]),
+        signup["is_admin"],
+    )
 
     return (
         {
@@ -394,23 +380,10 @@ def sell_card(current_user: UserModel):
     else:
         input = request.form
 
-    #
-    # Some validation
-    #
-    if not input or not input.get("card_id") or not input.get("price"):
-        return (
-            {"error": "Please provide all parameters for 'SellCardRequest' schema."},
-            400,
-        )
-
-    # load card
-    card: CardModel = db.session.get(CardModel, input.get("card_id"))
-    if not card:
-        return ({"error": f"No card with id: {input.get('card_id')}"}, 404)
-
-    collection = db.getCollection(current_user, card)
-    if not collection or collection.count <= 0:
-        return ({"error": f"You does not own {card.name}"}, 404)
+    try:
+        collection = validate_sell_card(input, db, current_user)
+    except ValidationError as e:
+        return ({"error": e.messages}, 400)
 
     # mark the card as available on the marked
     collection.is_marketed = True
@@ -480,7 +453,7 @@ def buy_card(current_user: UserModel):
             {"error": "Please provide all parameters for 'BuyCardRequest' schema."},
             400,
         )
-    
+
     # load seller user
     seller: UserModel = db.session.get(UserModel, input.get("seller_id"))
     if not seller:
@@ -783,8 +756,8 @@ def admin_buy_user_card(current_user: UserModel):
             {"error": "Please provide all parameters for 'BuyUserCardRequest' schema."},
             400,
         )
-    
-    if(input.get("seller_id") == input.get("buyer_id")):
+
+    if input.get("seller_id") == input.get("buyer_id"):
         return ({"error": f"Seller and buyer must be different users!"}, 400)
 
     # load buyer user

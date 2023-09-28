@@ -1,34 +1,40 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, EXCLUDE
 
 
-class TestSchema(Schema):
+class BaseSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+
+class TestSchema(BaseSchema):
     id = fields.Int()
     content = fields.Str()
 
 
-class TokenResponse(Schema):
+class TokenResponse(BaseSchema):
     token = fields.Str()
 
 
-class UserCredentials(Schema):
-    username = fields.Email()
-    password = fields.Str()
+class UserCredentials(BaseSchema):
+    username = fields.Email(required=True)
+    password = fields.Str(required=True)
 
 
-class SignupRequest(Schema):
-    username = fields.Email()
-    password = fields.Str()
+class UserCredentialsWithAdmin(BaseSchema):
+    username = fields.Email(required=True)
+    password = fields.Str(required=True)
+    is_admin = fields.Bool(load_default=False)
 
 
-class OkResponse(Schema):
+class OkResponse(BaseSchema):
     message = fields.Str()
 
 
-class ErrorResponse(Schema):
+class ErrorResponse(BaseSchema):
     error = fields.Str()
 
 
-class CollectionCardResponse(Schema):
+class CollectionCardResponse(BaseSchema):
     card_id = fields.Int()
     name = fields.Str()
     url = fields.Url()
@@ -37,56 +43,66 @@ class CollectionCardResponse(Schema):
     is_marketed = fields.Bool()
 
 
-class CollectionResponse(Schema):
+class CollectionResponse(BaseSchema):
     owner = fields.Str()
     collection = fields.List(fields.Nested(CollectionCardResponse))
 
 
-class UserResponse(Schema):
+class UserResponse(BaseSchema):
     cards = fields.Int()
     credits = fields.Int()
     name = fields.Email()
 
-class UserAdminResponse(Schema):
+
+class UserAdminResponse(BaseSchema):
     id = fields.Int()
     name = fields.Email()
     credits = fields.Int()
     collection = fields.List(fields.Nested(CollectionCardResponse))
 
-class UsersAdminResponse(Schema):
+
+class UsersAdminResponse(BaseSchema):
     current = fields.Str()
     users = fields.List(fields.Nested(UserAdminResponse))
 
-class CardAdminResponse(Schema):
+
+class CardAdminResponse(BaseSchema):
     id = fields.Int()
     name = fields.Str()
     url = fields.Url()
 
-class CardsAdminResponse(Schema):
+
+class CardsAdminResponse(BaseSchema):
     total = fields.Str()
     cards = fields.List(fields.Nested(CardAdminResponse))
 
-class SellUserCardRequest(Schema):
+
+class SellUserCardRequest(BaseSchema):
     user_id = fields.Int()
     card_id = fields.Int()
     price = fields.Int()
 
-class SellCardRequest(Schema):
+
+class SellCardRequest(BaseSchema):
     card_id = fields.Int()
     price = fields.Int()
 
-class CancelSellUserCardRequest(Schema):
+
+class CancelSellUserCardRequest(BaseSchema):
     user_id = fields.Int()
     card_id = fields.Int()
 
-class CancelSellCardRequest(Schema):
+
+class CancelSellCardRequest(BaseSchema):
     card_id = fields.Int()
 
-class BuyUserCardRequest(Schema):
+
+class BuyUserCardRequest(BaseSchema):
     buyer_id = fields.Int()
     seller_id = fields.Int()
     card_id = fields.Int()
 
-class BuyCardRequest(Schema):
+
+class BuyCardRequest(BaseSchema):
     seller_id = fields.Int()
     card_id = fields.Int()

@@ -28,23 +28,7 @@ class Database:
         return self.engine.connect()
 
     def init_db(self):
-        """data = [
-            BookModel(
-                title="Test Book 1", author="John Doe", rating=10, isbn=111234, count=2
-            ),
-            BookModel(
-                title="Test Book 2", author="John Doe", rating=7, isbn=22255, count=15
-            ),
-            BookModel(
-                title="Test Book 6", author="Jane Doe", rating=9, isbn=666, count=6
-            ),
-            UserModel(username="lasko.laskov"),
-            UserModel(username="test.user"),
-        ]"""
-
         Base.metadata.create_all(self.engine)
-        # self.session.add_all(data)
-        # self.session.commit()
 
     def getUserByName(self, name: str) -> UserModel:
         stmt: Select = select(UserModel).where(UserModel.username == name)
@@ -58,7 +42,7 @@ class Database:
 
     def insertUser(self, username: str, password: str, is_admin: bool):
         user = UserModel(
-            username=username, password=password, is_admin=is_admin, credits=9000
+            username=username, password=password, is_admin=is_admin, credits=500
         )
         self.session.add(user)
         self.session.commit()
@@ -82,9 +66,11 @@ class Database:
         )
         result: Result = self.session.execute(stmt)
         return result.scalar()
-    
+
     def getMarketedCollections(self) -> ScalarResult[CollectionModel]:
-        stmt: Select = select(CollectionModel).where(CollectionModel.is_marketed == True)
+        stmt: Select = select(CollectionModel).where(
+            CollectionModel.is_marketed == True
+        )
         result: Result = self.session.execute(stmt)
         return result.scalars()
 
@@ -122,17 +108,3 @@ class Database:
             user.collections.append(collection)
 
         self.session.commit()
-
-
-"""     # create parent, append a child via association
-p = Parent()
-a = Association(extra_data="some data")
-a.child = Child()
-p.children.append(a)
-
-# iterate through child objects via association, including association
-# attributes
-for assoc in p.children:
-    print(assoc.extra_data)
-    print(assoc.child) 
-"""
